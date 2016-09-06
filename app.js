@@ -6,8 +6,6 @@ var app = express();
 var server = app.listen(8000, () => {
     console.log('Server on http://127.0.0.1:8000');
 })
-var imgUrl;
-var url;
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
