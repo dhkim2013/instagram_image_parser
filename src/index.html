@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>instagram image parser</title>
+        <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+	    <!--Import Google Icon Font-->
+	    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	    <!--Import materialize.css-->
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+	    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Cabin" />
+
+        <style media="screen">
+            #title {
+                width: 100%;
+                height: 500px;
+                background-color: #1976d2;
+            }
+
+            #name {
+                font-family: Cabin;
+                color: white;
+                font-size: 72px;
+            }
+
+        /* label color */
+           .input-field label {
+             color: #1976d2;
+           }
+           /* label focus color */
+           .input-field input[type=text]:focus + label {
+             color: #1976d2;
+           }
+           /* label underline focus color */
+           .input-field input[type=text]:focus {
+             border-bottom: 1px solid #1976d2;
+             box-shadow: 0 1px 0 0 #1976d2;
+           }
+           /* valid color */
+           .input-field input[type=text].valid {
+             border-bottom: 1px solid #1976d2;
+             box-shadow: 0 1px 0 0 #1976d2;
+           }
+           /* invalid color */
+           .input-field input[type=text].invalid {
+             border-bottom: 1px solid #1976d2;
+             box-shadow: 0 1px 0 0 #1976d2;
+           }
+           /* icon prefix focus color */
+           .input-field .prefix.active {
+             color: #1976d2;
+           }
+
+           #image {
+               color: #1976d2;
+           }
+        </style>
+    </head>
+    <body>
+
+        <div class="valign-wrapper" id="title">
+            <p class="container valign center-align" id="name">Instagram Image Parser</p>
+        </div>
+
+        <br>
+
+        <div class="container" id="main">
+            <div class="input-field">
+                <input id="url" type="text" class="validate" oninput="start()">
+                <label for="url">URL</label>
+                <div id="loading" class="center"></div>
+                <a id="image" class="flow-text" href="" download></a>
+            </div>
+        </div>
+
+        <script>
+            var isVal = true;
+
+            function start() {
+                $('#image').text('');
+                $('#image').attr('href', '');
+                if(isVal) {
+                    $('#loading').append(`
+                <div class="preloader-wrapper small active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>`);
+                    isVal = false;
+                }
+
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/url',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {url: $('#url').val()},
+                    success: (result) => {
+                        console.log(result['url']);
+                        $('#image').text('download image');
+                        $('#image').attr('href', result['url']);
+                        isVal = true;
+                        $('#loading').empty();
+                    }
+                });
+
+                if($('#url').val() == '') {
+                    isVal = true;
+                    $('#loading').empty();
+                }
+            }
+        </script>
+    </body>
+</html>

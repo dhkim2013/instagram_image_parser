@@ -1,0 +1,20 @@
+#title {
+    width: 100%;
+    height: 500px;
+    background-color: #1976d2;
+}
+
+#name {
+    font-family: Cabin;
+    color: white;
+    font-size: 72px;
+}
+
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #1976d2;
+    box-shadow: 0 1px 0 0 #1976d2;
+}
+
+.input-field input[type=text]:focus + label {
+     color: #1976d2;
+ }
