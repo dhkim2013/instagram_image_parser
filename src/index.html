@@ -54,6 +54,7 @@
            }
 
            #image {
+               text-align: center;
                color: #1976d2;
            }
         </style>
@@ -68,56 +69,79 @@
 
         <div class="container" id="main">
             <div class="input-field">
-                <input id="url" type="text" class="validate" oninput="start()">
-                <label for="url">URL</label>
+
+                <div class="row">
+
+                    <form>
+                        <div class="col s8">
+                            <input id="url" type="text" class="validate">
+                            <label for="url">URL</label>
+                        </div>
+
+                        <div class="col s4 center">
+                            <button class="btn waves-effect waves-light blue" type="submit" name="action">Submit
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+
                 <div id="loading" class="center"></div>
-                <a id="image" class="flow-text" href="" download></a>
+                <div id="image"></div>
+
             </div>
         </div>
 
         <script>
-            var isVal = true;
+            $(document).ready(() => {
+                $('form').submit((e) => {
+                    e.preventDefault();
 
-            function start() {
-                $('#image').text('');
-                $('#image').attr('href', '');
-                if(isVal) {
-                    $('#loading').append(`
-                <div class="preloader-wrapper small active">
-                    <div class="spinner-layer spinner-blue-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="gap-patch">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="circle-clipper right">
-                            <div class="circle"></div>
-                        </div>
-                    </div>
-                </div>`);
-                    isVal = false;
-                }
-
-                $.ajax({
-                    url: 'http://127.0.0.1:8000/url',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {url: $('#url').val()},
-                    success: (result) => {
-                        console.log(result['url']);
-                        $('#image').text('download image');
-                        $('#image').attr('href', result['url']);
-                        isVal = true;
+                    if($('#url').val() != '') {
+                        $('#image').empty();
                         $('#loading').empty();
-                    }
-                });
 
-                if($('#url').val() == '') {
-                    isVal = true;
-                    $('#loading').empty();
-                }
-            }
+                        $('#loading').append(`
+                            <div class="preloader-wrapper small active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>`);
+
+                        $.ajax({
+                            url: '/url',
+                            dataType: 'json',
+                            type: 'POST',
+                            data: {url: $('#url').val()},
+                            success: (result) => {
+
+                                if(result['url'] != null) {
+                                    $('#image').empty();
+                                    $('#image').append(`<a class="flow-text" href="${result['url']}" download>Download Image</a>`)
+                                    $('#loading').empty();
+                                }
+
+                                else {
+                                    $('#image').empty();
+                                    $('#image').append('<a class="flow-text">Image not found</a>')
+                                    $('#loading').empty();
+                                }
+
+                            }
+                        });
+                    }
+
+                });
+            });
         </script>
     </body>
 </html>
