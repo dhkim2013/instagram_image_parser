@@ -31,7 +31,7 @@ app.post('/url', (req, res) => {
         }
 
         else if (!err) {
-            var re = /https:\/\/scontent.*\.cdninstagram\.com\/t51\.2885-15.*\/e35\/.*\.2/g;
+            var re = /https:\/\/scontent.*\.cdninstagram\.com.*\/t51\.2885-15.*\/e35\/.*\.2/g;
             var data = html.match(re);
 
             if(data !== undefined && data !== null) {
